@@ -1,0 +1,26 @@
+{
+  "key": "JIRA-1",
+  "fields": {
+    "summary": "My JIRA issue 1",
+    "issuetype": {"name": "story"},
+    "priority": {"name": "major"},
+    "worklog": {
+      "startAt": 123,
+      "maxResults": 10,
+      "total": 1,
+      "worklogs": [
+        {
+          "author": {
+            "accountId": "1",
+            "emailAddress": "john.doe@jira.com",
+            "displayName": "John Doe"
+          },
+          "comment": "My first worklog!",
+          "timeSpentSeconds": 3600,
+          "started": "2019-08-05T15:53:00+02:00"
+        }
+      ]
+    }
+  }
+
+}

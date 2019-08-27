@@ -1,0 +1,26 @@
+{
+  "key": "JIRA-1",
+  "fields": {
+    "summary": "My JIRA issue 1",
+    "issuetype": {"name": "story"},
+    "priority": {"name": "major"},
+    "worklog": {
+      "startAt": 123,
+      "maxResults": 10,
+      "total": 1,
+      "worklogs": [
+        {
+          "author": {
+            "accountId": "2",
+            "emailAddress": "mary.rider@jira.com",
+            "displayName": "Mary Rider"
+          },
+          "comment": "Helping John to find himself!",
+          "timeSpentSeconds": 3600,
+          "started": "2019-07-20T15:53:00+02:00"
+        }
+      ]
+    }
+  }
+
+}

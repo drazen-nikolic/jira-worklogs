@@ -1,0 +1,5 @@
+# Change (or overwrite with environment variables) your JIRA configuration
+jira:
+  baseUrl: https://myjira.atlassian.net/rest/api/2
+  username: my-jira-username
+  apiToken: my-jira-api-token # see https://confluence.atlassian.com/cloud/api-tokens-938839638.html
