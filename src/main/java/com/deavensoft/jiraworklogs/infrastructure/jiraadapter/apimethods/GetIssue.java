@@ -2,14 +2,8 @@ package com.deavensoft.jiraworklogs.infrastructure.jiraadapter.apimethods;
 
 import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.client.JiraRestClient;
 import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.model.JiraIssue;
-import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.model.SearchIssuesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * Gets the required Issue data

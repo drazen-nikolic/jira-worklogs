@@ -5,12 +5,10 @@ import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.apimethods.FilterI
 import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.apimethods.GetIssue;
 import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.model.JiraIssue;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -18,11 +16,12 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -60,24 +59,25 @@ public class JiraWorkLogServiceAdapterTest {
     @Test
     public void findWorkLogsForUserInPeriod_shouldFilterUserWorklogsOnly() {
         // when
-        String userEmail = "john.doe@jira.com";
+        String userDisplayName = "John Doe";
+        Predicate<WorkLog> filter = workLog -> userDisplayName.equals(workLog.getUserDisplayName());
         Collection<WorkLog> workLogs = workLogServiceAdapter
-                .findWorkLogsForUserInPeriod(userEmail, LocalDate.MIN, LocalDate.MAX);
+                .findWorkLogsForUserInPeriod(filter, null, LocalDate.MIN, LocalDate.MAX);
 
         // then
         assertThat(workLogs, hasSize(3));
         assertThat(workLogs.stream()
-                .map(WorkLog::getUserEmail)
+                .map(WorkLog::getUserDisplayName)
                 .distinct()
-                .collect(Collectors.toList()), contains(userEmail));
+                .collect(Collectors.toList()), contains(userDisplayName));
     }
 
     @Test
     public void findWorkLogsForUserInPeriod_shouldReturnItemsOrdered() {
         // when
-        String userEmail = "john.doe@jira.com";
+        Predicate<WorkLog> filter = workLog -> "John Doe".equals(workLog.getUserDisplayName());
         Collection<WorkLog> workLogs = workLogServiceAdapter
-                .findWorkLogsForUserInPeriod(userEmail, LocalDate.MIN, LocalDate.MAX);
+                .findWorkLogsForUserInPeriod(filter, null, LocalDate.MIN, LocalDate.MAX);
 
         // then
         assertThat(workLogs.stream()
@@ -85,16 +85,16 @@ public class JiraWorkLogServiceAdapterTest {
                 .collect(Collectors.toList()),
                 contains(LocalDate.of(2019, 7 , 15),
                         LocalDate.of(2019, 7 , 16),
-                        LocalDate.of(2019, 8 , 5))
+                        LocalDate.of(2019, 8 , 7))
         );
     }
 
     @Test
     public void findWorkLogsForUserInPeriod_shouldFilterUserWorklogsInTimePeriod() {
         // when
-        String userEmail = "john.doe@jira.com";
+        Predicate<WorkLog> filter = workLog -> "John Doe".equals(workLog.getUserDisplayName());
         Collection<WorkLog> workLogs = workLogServiceAdapter
-                .findWorkLogsForUserInPeriod(userEmail,
+                .findWorkLogsForUserInPeriod(filter, null,
                         LocalDate.of(2019, 7, 1),
                         LocalDate.of(2019, 7, 31));
 
@@ -104,4 +104,19 @@ public class JiraWorkLogServiceAdapterTest {
                 .map(WorkLog::getDescription)
                 .collect(Collectors.toList()), contains("My first worklog!", "My 2nd worklog!"));
     }
+
+
+    @Test
+    public void findWorkLogsForUserInPeriod_shouldFilterByDayOfWeekRegex() {
+        // when
+        String userDisplayName = "John Doe";
+        String dayOfWeekRegex = "Mon|Tue";
+        Predicate<WorkLog> filter = workLog -> userDisplayName.equals(workLog.getUserDisplayName());
+        Collection<WorkLog> workLogs = workLogServiceAdapter
+                .findWorkLogsForUserInPeriod(filter, dayOfWeekRegex, LocalDate.MIN, LocalDate.MAX);
+
+        // then
+        assertThat(workLogs, hasSize(2));
+    }
+
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -15,8 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkLog {
-    private String userDisplayName;
-    private String userEmail;
+    @NotNull private String userDisplayName;
     private String description;
     private Float logHours;
     private LocalDate date;

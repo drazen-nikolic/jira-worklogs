@@ -27,9 +27,9 @@ public class CsvExportController {
     private final WorkLogCsvExport workLogCsvExport;
 
     @GetMapping(value = "/csv-export", produces = "text/csv")
-    public @ResponseBody byte[] getFile(@RequestParam String userEmail,
+    public @ResponseBody byte[] getFile(@RequestParam String userDisplayName, @RequestParam(required = false) String dayOfWeekList,
         @RequestParam String startDate, @RequestParam String endDate, HttpServletResponse response) throws IOException {
-        File csvFile = workLogCsvExport.exportWorkLogsForUserInPeriod(userEmail,
+        File csvFile = workLogCsvExport.exportWorkLogsForUserInPeriod(userDisplayName, dayOfWeekList,
                 LocalDate.parse(startDate), LocalDate.parse(endDate));
         try (InputStream in = new FileInputStream(csvFile)) {
             response.addHeader("Content-Disposition", "attachment; filename=\"" + csvFile.getName() + "\"");
