@@ -35,13 +35,13 @@ Where:
 * `userDisplayName` - name of the JIRA user whose issue work logs are being exported
 * `startDate` - Period start date (ISO Data format) in which work happened (inclusive) 
 * `endDate` - Period end date (ISO Data format) in which work happened (inclusive) 
-* `dayOfWeekRegex` - (optional parameter) additional filter, comma-delimited list of week days to export (e.g. Mon,Tue,Wed)
+* `dayOfWeekList` - (optional parameter) additional filter, comma-delimited list of week days to export (e.g. Mon,Tue,Wed)
 
 # Result
 As a result, we'll download the CSV file, with next columns:
 
 |Work Date|DOW|Hours|User|Issue Key|Issue Summary|Issue Type|Issue Priority|Work Description|
-|---------|----|-----|----|----------|---------|-------------|----------|--------------|----------------|
+|---------|----|----|----------|---------|-------------|----------|--------------|----------------|
 |2019-07-22|Mon|8.00|John Doe|PROJ-123|Show FAQs on web site|Story|Critical|Implementing requested changes.|
 |2019-07-23|Tue|1.00|John Doe|PROJ-456|Code review|Story|Major|Reviewing PRs from team members.|
 
