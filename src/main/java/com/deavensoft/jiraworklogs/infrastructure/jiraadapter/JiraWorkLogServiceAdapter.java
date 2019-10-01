@@ -59,8 +59,8 @@ public class JiraWorkLogServiceAdapter implements WorkLogServicePort {
     }
 
     private boolean isInPeriod(WorkLog workLog, LocalDate startDate, LocalDate endDate) {
-        return (workLog.getDate().equals(startDate) || workLog.getDate().isAfter(startDate))
-                && (workLog.getDate().equals(endDate) || workLog.getDate().isBefore(endDate));
+        return (workLog.getDate().isEqual(startDate) || workLog.getDate().isAfter(startDate))
+                && (workLog.getDate().isEqual(endDate) || workLog.getDate().isBefore(endDate));
     }
 
     private boolean filterByDayOfWeek(LocalDate date, String dayOfWeekRegex) {
