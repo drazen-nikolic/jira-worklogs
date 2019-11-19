@@ -3,6 +3,7 @@ package com.deavensoft.jiraworklogs.application.csvexporteradapter;
 import com.deavensoft.jiraworklogs.domain.Issue;
 import com.deavensoft.jiraworklogs.domain.WorkLog;
 import com.deavensoft.jiraworklogs.domain.WorkLogManagerPort;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -137,6 +138,46 @@ public class WorkLogCsvExportAdapterTest {
         assertThat(workLogRecord.next(), is(ISSUE_TYPE));
         assertThat(workLogRecord.next(), is(ISSUE_PRIORITY));
         assertThat(workLogRecord.next(), is(WORK_DESCRIPTION));
+    }
+
+    @Test
+    public void exportWorkLogsForUserInPeriod_ShouldReturnCSVFileWithEmptyDescription_WhenWorkLogDescriptionIsNull() throws Exception {
+        // given
+        Collection<WorkLog> workLogCollection = Collections.singletonList(
+                WorkLog.builder()
+                        .userDisplayName(USER_DISPLAY_NAME)
+                        .logHours(LOG_HOURS)
+                        .description(null) // null description
+                        .date(WORK_LOG_DATE)
+                        .details(Issue.builder()
+                                .key(ISSUE_KEY)
+                                .type(ISSUE_TYPE)
+                                .priority(ISSUE_PRIORITY)
+                                .summary(ISSUE_SUMMARY)
+                                .build())
+                        .build()
+        );
+        when(workLogManagerPort.findWorkLogsForUserInPeriod(any(), any(), any(), any())).thenReturn(workLogCollection);
+
+
+        // when
+        File csvFile = workLogCsvExportAdapter.exportWorkLogsForUserInPeriod(USER_DISPLAY_NAME, null, START_DATE, END_DATE);
+
+        // then
+        assertThat(csvFile, is(notNullValue()));
+        List<List<String>> records = readCsvFileRecords(csvFile);
+        assertThat(records, hasSize(2));
+
+        Iterator<String> workLogRecord = records.get(1).iterator();
+        assertThat(workLogRecord.next(), is(workLogCsvExportAdapter.formatDate(WORK_LOG_DATE)));
+        assertThat(workLogRecord.next(), is(workLogCsvExportAdapter.formatDayOfWeek(WORK_LOG_DATE)));
+        assertThat(workLogRecord.next(), is(workLogCsvExportAdapter.formatFloat(LOG_HOURS)));
+        assertThat(workLogRecord.next(), is(USER_DISPLAY_NAME));
+        assertThat(workLogRecord.next(), is(ISSUE_KEY));
+        assertThat(workLogRecord.next(), is(ISSUE_SUMMARY));
+        assertThat(workLogRecord.next(), is(ISSUE_TYPE));
+        assertThat(workLogRecord.next(), is(ISSUE_PRIORITY));
+        assertThat(workLogRecord.hasNext(), is(false));
     }
 
     @Test

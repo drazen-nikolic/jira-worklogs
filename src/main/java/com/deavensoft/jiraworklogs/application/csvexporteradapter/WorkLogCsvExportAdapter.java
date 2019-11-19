@@ -80,7 +80,7 @@ public class WorkLogCsvExportAdapter implements WorkLogCsvExport {
                 workLog.getDetails().getSummary(),
                 workLog.getDetails().getType(),
                 workLog.getDetails().getPriority(),
-                workLog.getDescription()
+                workLog.getDescription() != null ? workLog.getDescription() : StringUtils.EMPTY
         );
     }
 
