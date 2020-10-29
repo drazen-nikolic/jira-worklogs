@@ -6,6 +6,7 @@ import com.deavensoft.jiraworklogs.domain.WorkLogServicePort;
 import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.apimethods.FilterIssuesInPeriodWithWorkLogs;
 import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.apimethods.GetIssue;
 import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.model.JiraIssue;
+import com.deavensoft.jiraworklogs.infrastructure.jiraadapter.model.Name;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -51,7 +53,7 @@ public class JiraWorkLogServiceAdapter implements WorkLogServicePort {
                         .details(Issue.builder()
                                 .key(jiraIssue.getKey())
                                 .type(jiraIssue.getFields().getIssuetype().getName())
-                                .priority(jiraIssue.getFields().getPriority().getName())
+                                .priority(Optional.ofNullable(jiraIssue.getFields().getPriority()).map(Name::getName).orElse(""))
                                 .summary(jiraIssue.getFields().getSummary())
                                 .build())
                         .build())
