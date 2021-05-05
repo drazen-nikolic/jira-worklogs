@@ -31,11 +31,16 @@ public class CsvExportController {
         @RequestParam String startDate, @RequestParam String endDate, HttpServletResponse response) throws IOException {
         File csvFile = workLogCsvExport.exportWorkLogsForUserInPeriod(userDisplayName, dayOfWeekList,
                 LocalDate.parse(startDate), LocalDate.parse(endDate));
-        try (InputStream in = new FileInputStream(csvFile)) {
-            response.addHeader("Content-Disposition", "attachment; filename=\"" + csvFile.getName() + "\"");
-            return IOUtils.toByteArray(in);
-        } finally {
-            Files.delete(csvFile.toPath());
+        if (csvFile.exists()) {
+            try (InputStream in = new FileInputStream(csvFile)) {
+                response.addHeader("Content-Disposition",
+                    "attachment; filename=\"" + csvFile.getName() + "\"");
+                return IOUtils.toByteArray(in);
+            } finally {
+                Files.delete(csvFile.toPath());
+            }
+        } else {
+            throw new IllegalArgumentException("CSV file could not be produced for the given parameters!");
         }
     }
 }
